@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
+
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -11,7 +13,9 @@ const SignUpPage = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Get signup function and loading state from Zustand store
+  const { signup, isSiginingUp } = useAuthStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -48,10 +52,8 @@ const SignUpPage = () => {
     
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain at least one uppercase letter, one lowercase letter, and one number';
+    } else if (formData.password.length < 4) {
+      newErrors.password = 'Password must be at least 4 characters';
     }
     
     if (!formData.gender) {
@@ -68,22 +70,18 @@ const SignUpPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
     if (!validateForm()) return;
     
-    setIsLoading(true);
-    
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Here you would typically send the data to your server
-      alert('Account created successfully! (This is a demo)');
-      console.log('Sign up attempt:', formData);
+      // Call signup function from Zustand store
+      await signup(formData, navigate);
+      // Navigation will be handled by the store on successful signup
     } catch (error) {
-      alert('Sign up failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      // Error handling is done in the store
+      console.error('Signup error:', error);
     }
   };
 
@@ -99,7 +97,7 @@ const SignUpPage = () => {
           </div>
 
           {/* Form */}
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Input */}
             <div>
               <label htmlFor="username" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -111,7 +109,8 @@ const SignUpPage = () => {
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
-                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isSiginingUp}
+                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.username 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -134,7 +133,8 @@ const SignUpPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isSiginingUp}
+                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.email 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -157,7 +157,8 @@ const SignUpPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isSiginingUp}
+                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.password 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -179,7 +180,8 @@ const SignUpPage = () => {
                 name="gender"
                 value={formData.gender}
                 onChange={handleInputChange}
-                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isSiginingUp}
+                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.gender 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -207,7 +209,8 @@ const SignUpPage = () => {
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
-                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isSiginingUp}
+                className={`w-full px-2 py-1.5 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.location 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -221,15 +224,15 @@ const SignUpPage = () => {
 
             {/* Sign Up Button */}
             <button
-              onClick={handleSubmit}
-              disabled={isLoading}
+              type="submit"
+              disabled={isSiginingUp}
               className={`w-full py-2 rounded-xl font-semibold text-white transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl ${
-                isLoading 
+                isSiginingUp 
                   ? 'bg-gray-400 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700'
               }`}
             >
-              {isLoading ? (
+              {isSiginingUp ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Creating Account...</span>
@@ -238,16 +241,18 @@ const SignUpPage = () => {
                 'Create Account'
               )}
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Additional Info */}
         <div className="text-center mt-2">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <button onClick={()=>{
-              navigate('/loginPage');
-            }} className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
+            <button 
+              onClick={() => navigate('/loginPage')}
+              disabled={isSiginingUp}
+              className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200 disabled:opacity-50"
+            >
               Sign in here
             </button>
           </p>

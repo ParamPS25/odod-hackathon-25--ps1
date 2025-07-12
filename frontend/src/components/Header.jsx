@@ -1,85 +1,98 @@
-import React, { useState } from 'react';
-import { Home, User, LogIn } from 'lucide-react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
 
 const Header = () => {
-  const [activeItem, setActiveItem] = useState('home');
   const navigate = useNavigate();
+  const { authUser, logout } = useAuthStore();
+  const isLoggedIn = !!authUser;
 
-  const handleItemClick = (item) => {
-    setActiveItem(item);
-    if (item === 'home') {
-      navigate('/');
-      console.log('Navigating to home page');
-    } else if (item === 'profile') {
-      navigate('./UserProfile');
-      console.log('Navigating to user profile page');
-    }
-    console.log(`Clicked: ${item}`);
+  const handleLogin = () => {
+    navigate('/loginPage');
   };
 
-  const handleLoginClick = () => {
-    navigate('/LoginPage');
-    console.log('Navigating to login page');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/'); // Redirect to home page after logout
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const handleProfileClick = () => {
+    navigate('/UserProfile');
+  };
+
+  const handleHomeClick = () => {
+    navigate('/');
   };
 
   return (
-    <div>
-      {/* Fixed Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo/Brand */}
-            <div className="flex-shrink-0">
-              <span className="text-xl font-bold text-gray-800">Skill Swap PlatForm</span>
-            </div>
+    <div className="bg-white/90 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
+      <div className="max-w-4xl mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo/Brand Section */}
+          <div className="cursor-pointer" onClick={handleHomeClick}>
+            <h1 className="text-xl font-semibold text-gray-800 mb-1">
+              Skill Swap Platform
+            </h1>
+            <h2 className="text-sm text-gray-600">
+              Exchange skills, grow together
+            </h2>
+          </div>
 
-            {/* Navigation Items */}
-            <div className="flex items-center space-x-8">
-              <button
-                onClick={() => handleItemClick('home')}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeItem === 'home'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:text-blue-700 hover:bg-gray-100'
-                }`}
-              >
-                <Home className="w-4 h-4" />
-                <span>Home</span>
-              </button>
-
-              <button
-                onClick={() => handleItemClick('profile')}
-                className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeItem === 'profile'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:text-blue-700 hover:bg-gray-100'
-                }`}
-              >
-                <User className="w-4 h-4" />
-                <span>Profile</span>
-              </button>
-
-              <div>
-                <button 
-                  onClick={handleLoginClick}
-                  className="bg-white border-2 border-gray-300 px-6 py-2 rounded-full hover:bg-gray-50 transition-colors"
+          {/* Navigation and Auth Section */}
+          <div className="flex items-center space-x-4">
+            {isLoggedIn ? (
+              <>
+                {/* User Info */}
+                <div className="text-sm text-gray-600">
+                  Welcome, <span className="font-medium text-gray-800">
+                    {authUser.username || authUser.name || authUser.email}
+                  </span>
+                </div>
+                
+                {/* Profile Button */}
+                <button
+                  onClick={handleProfileClick}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                >
+                  Profile
+                </button>
+                
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                {/* Login Button */}
+                <button
+                  onClick={handleLogin}
+                  className="bg-white border-2 border-gray-300 px-6 py-2 rounded-full hover:bg-gray-50 transition-colors duration-200 font-medium"
                 >
                   Login
                 </button>
-              </div>
-            </div>
+                
+                {/* Sign Up Button */}
+                <button
+                  onClick={() => navigate('/signUpPage')}
+                  className="bg-teal-400 text-white px-6 py-2 rounded-full hover:bg-teal-500 transition-colors duration-200 font-medium"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
         </div>
-      </nav>
-
-      {/* Main Content Area */}
-     
+      </div>
     </div>
   );
 };
 
-
 export default Header;
-
-

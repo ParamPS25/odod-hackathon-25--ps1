@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthStore';
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -8,7 +10,9 @@ const LoginPage = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Get login function and loading state from Zustand store
+  const { login, isLoggingIn } = useAuthStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -37,36 +41,28 @@ const LoginPage = () => {
     
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (formData.password.length < 4) {
+      newErrors.password = 'Password must be at least 4 characters';
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
-  if (!validateForm()) return;
-  
-  setIsLoading(true);
-  
-  try {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     
-    // Here you would typically send the data to your server
-    alert('Login successful! (This is a demo)');
-    console.log('Login attempt:', formData);
+    if (!validateForm()) return;
     
-    // Navigate to UserProfile on successful login
-    navigate('/UserProfile');
-    
-  } catch (error) {
-    alert('Login failed. Please try again.');
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      // Call login function from Zustand store
+      await login(formData, navigate);
+      // Navigation will be handled by the store on successful login
+    } catch (error) {
+      // Error handling is done in the store
+      console.error('Login error:', error);
+    }
+  };
 
   const handleForgotUsername = () => {
     alert('Forgot Username functionality would be implemented here');
@@ -88,7 +84,7 @@ const LoginPage = () => {
           </div>
 
           {/* Form */}
-          <div className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -100,7 +96,8 @@ const LoginPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isLoggingIn}
+                className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.email 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -123,7 +120,8 @@ const LoginPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none ${
+                disabled={isLoggingIn}
+                className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-200 bg-gray-50/50 focus:bg-white focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${
                   errors.password 
                     ? 'border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-200' 
                     : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200'
@@ -137,15 +135,15 @@ const LoginPage = () => {
 
             {/* Login Button */}
             <button
-              onClick={handleSubmit}
-              disabled={isLoading}
+              type="submit"
+              disabled={isLoggingIn}
               className={`w-full py-4 rounded-xl font-semibold text-white transition-all duration-300 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl ${
-                isLoading 
+                isLoggingIn 
                   ? 'bg-gray-400 cursor-not-allowed' 
                   : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700'
               }`}
             >
-              {isLoading ? (
+              {isLoggingIn ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Signing In...</span>
@@ -154,21 +152,23 @@ const LoginPage = () => {
                 'Sign In'
               )}
             </button>
-          </div>
+          </form>
 
           {/* Forgot Links */}
           <div className="mt-8 pt-6 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6">
               <button 
                 onClick={handleForgotUsername}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline transition-colors duration-200"
+                disabled={isLoggingIn}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline transition-colors duration-200 disabled:opacity-50"
               >
                 Forgot Username?
               </button>
               <span className="hidden sm:block text-gray-400">•</span>
               <button 
                 onClick={handleForgotPassword}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline transition-colors duration-200"
+                disabled={isLoggingIn}
+                className="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline transition-colors duration-200 disabled:opacity-50"
               >
                 Forgot Password?
               </button>
@@ -180,7 +180,11 @@ const LoginPage = () => {
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
-            <button onClick={()=>{ navigate('/signUpPage');}} className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
+            <button 
+              onClick={() => navigate('/signUpPage')}
+              disabled={isLoggingIn}
+              className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200 disabled:opacity-50"
+            >
               Sign up here
             </button>
           </p>
