@@ -1,9 +1,10 @@
 import React from 'react'
 import Home from './pages/Home.jsx'
+import LoginPage from './pages/LoginPage.jsx';
 function App() {
   return (
     <>
-<Home />
+    <LoginPage/>
     </>
   )
 }
