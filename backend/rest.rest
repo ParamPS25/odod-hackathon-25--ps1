@@ -1,0 +1,151 @@
+###
+GET http://localhost:8080
+
+###
+
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+    "username": "param alt",
+    "email": "bhavsarparam1940@gmail.com",
+    "password": "1234",
+    "gender" : "male",
+    "location": "India"
+}
+
+###
+
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+    "username": "purv patel",
+    "email": "patelpurv2643@gmail.com",
+    "password": "1234",
+    "gender" : "male",
+    "location": "India"
+}
+
+###
+POST http://localhost:8080/api/auth/login   
+Content-Type: application/json
+
+{
+    "email": "patelpurv2643@gmail.com",
+    "password": "1234"
+}
+
+###
+
+POST http://localhost:8080/api/auth/login   
+Content-Type: application/json
+
+{
+    "email": "bhavsarparam1941@gmail.com",
+    "password": "1234"
+}
+
+###
+
+POST http://localhost:8080/api/auth/logout
+
+###
+GET http://localhost:8080/api/auth/check-auth
+
+
+### Create Offer
+POST http://localhost:8080/api/offers
+Content-Type: application/json
+
+{
+  "ReceiverId": "68721fd79e8969ec26186821",
+  "offerdSkills": ["React", "MongoDB"],
+  "wantedSKills": ["Python"],
+  "message": "Let's swap!"
+}
+
+### Get Offers
+
+GET http://localhost:8080/api/offers
+
+
+### Accept or reject an offer
+
+PUT http://localhost:8080/api/offers/687221a9f5992294d689a190
+Content-Type: application/json
+
+{
+  "status": "accepted"
+}
+
+### delete an offer
+
+DELETE http://localhost:8080/api/offers/687222d7f5992294d689a19a
+
+### Get User Profile
+GET http://localhost:8080/api/users/profile
+
+
+### Update User Profile
+PUT http://localhost:8080/api/users/profile
+Content-Type: application/json
+
+{
+    "username": "param bhavsar",
+    "email": "bhavsarparam1941@gmail.com",
+    "gender": "female",
+    "skillsOffered": ["React", "Node.js"],
+    "skillsWanted": ["Python", "Django"],
+    "location": "India"
+}
+
+### rate another user
+POST http://localhost:8080/api/users/rate/68721fd79e8969ec26186821
+Content-Type: application/json
+
+{
+    "rating": 4,
+    "feedback": "Great collaboration!"
+}
+
+### get all users (admin only)
+
+GET http://localhost:8080/api/users/admin/?page=1&limit=10
+Content-Type: application/json
+
+###
+
+GET http://localhost:8080/insert-users
+
+###
+
+GET http://localhost:8080/api/admin/users?page=1&limit=10&search=param
+Content-Type: application/json
+
+
+### siginup users
+
+POST http://localhost:8080/api/auth/admin/signup
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "email": "admin123@gmail.com",
+    "password": "admin123",
+    "gender" : "male",
+    "location": "India",
+    "role": "admin"
+}
+
+### login admin
+POST http://localhost:8080/api/auth/admin/login
+Content-Type: application/json
+
+{
+    "email": "admin123@gmail.com",
+    "password": "admin123"
+}
+
+### get all users (admin only)
+GET http://localhost:8080/api/admin/users?page=1&limit=10
