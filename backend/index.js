@@ -5,17 +5,23 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import userAuthRoutes from './routes/authRoutes.js';
+import cookieParser from 'cookie-parser';
+
 const app = express();
 const PORT = process.env.PORT || 8000;
 
 app.use(cors({
-    origin : process.env.CLIENT_URL || process.env.ADMIN_URL,
+    //origin : process.env.CLIENT_URL || process.env.ADMIN_URL,
+    //origin: [process.env.CLIENT_URL, process.env.ADMIN_URL],
+    origin: "*", 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true 
 }));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // connect to the database
 mongoose.connect(process.env.MONGO_URI)
@@ -30,6 +36,8 @@ mongoose.connect(process.env.MONGO_URI)
 app.get('/', (req, res) => {
     res.send('API is up and running');
 });
+
+app.use('/api/auth',userAuthRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
