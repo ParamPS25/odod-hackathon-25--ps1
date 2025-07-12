@@ -36,8 +36,8 @@ const baseUserSchema = new mongoose.Schema({
     },
     location: {
         type: String,
-        default: "Unknown",
-        required: true,
+        default: "",
+        maxlength: [100, "Location can't exceed 100 characters"],
     },
     avatar: {
         type: String,
