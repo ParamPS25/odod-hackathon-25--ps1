@@ -70,6 +70,10 @@ const baseUserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    ratings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "UserRating"
+    }],
     ipAddress: {
         type: String,
         required: true,

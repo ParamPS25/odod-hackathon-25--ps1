@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const feedbackSchema = new mongoose.Schema({
     fromUser: {
          type: mongoose.Schema.Types.ObjectId, 
@@ -24,3 +26,7 @@ const feedbackSchema = new mongoose.Schema({
         default: "" 
     },
 }, { timestamps: true });
+
+
+const Feedback = mongoose.model("Feedback", feedbackSchema);
+export default Feedback;

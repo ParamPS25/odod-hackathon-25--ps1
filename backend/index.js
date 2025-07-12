@@ -5,8 +5,10 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import userAuthRoutes from './routes/authRoutes.js';
 import cookieParser from 'cookie-parser';
+import userAuthRoutes from './routes/authRoutes.js';
+import offerRoutes from './routes/offerRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -38,6 +40,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth',userAuthRoutes);
+app.use('/api/offers',offerRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
