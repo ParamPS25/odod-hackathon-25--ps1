@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Home, User, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 const SwapRequest = () => {
+const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [rating, setRating] = useState(0);
   const [feedback, setFeedback] = useState('');
@@ -106,7 +108,7 @@ const SwapRequest = () => {
           
           {/* Request Button */}
           <div className="mb-6">
-            <button className="bg-teal-400 hover:bg-teal-500 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            <button onClick={() => navigate('/SkillExchangeForm')} className="bg-teal-400 hover:bg-teal-500 text-white px-6 py-2 rounded-lg font-medium transition-colors">
               Request
             </button>
           </div>
