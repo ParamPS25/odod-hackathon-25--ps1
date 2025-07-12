@@ -83,28 +83,48 @@ export const rateUser = async (req, res) => {
 };
 
 
-// // Admin: Get all users with pagination and optional search
-// export const getAllUsersAdmin = async (req, res) => {
-//     const { page = 1, limit = 10, search = "" } = req.query;
+export const getAllUsers = async (req, res) => {
+    const { page = 1, limit = 10, search = "" } = req.query;
 
-//     const query = {
-//         username: { $regex: search, $options: "i" },
-//     };
+    const query = {
+        username: { $regex: search, $options: "i" },
+    };
 
-//     try {
-//         const totalUsers = await BaseUser.countDocuments(query);
-//         const users = await BaseUser.find(query)
-//             .skip((page - 1) * limit)
-//             .limit(parseInt(limit))
-//             .select("-password");
+    try {
+        const totalUsers = await BaseUser.countDocuments(query);
+        const users = await BaseUser.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit))
+            .select("-password");
 
-//         res.json({
-//             total: totalUsers,
-//             page: parseInt(page),
-//             pages: Math.ceil(totalUsers / limit),
-//             users,
-//         });
-//     } catch (error) {
-//         res.status(500).json({ message: "Failed to fetch users", error });
-//     }
-// };
+        res.json({
+            total: totalUsers,
+            page: parseInt(page),
+            pages: Math.ceil(totalUsers / limit),
+            users,
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch users", error });
+    }
+};
+
+
+export const getUserById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const user = await BaseUser.findById(id)
+            .select("-password -__v -createdAt -updatedAt")
+            .populate("ratings", "rating feedback createdAt")
+            .populate("ratings.rater", "username avatar")
+            .populate("ratings.ratee", "username avatar");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: "Failed to fetch user", error });
+    }
+}

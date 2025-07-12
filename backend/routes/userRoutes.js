@@ -4,7 +4,8 @@ import {
     getUserProfile,
     updateUserProfile,
     rateUser,
-    // getAllUsersAdmin
+    getAllUsers,
+    getUserById
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -18,7 +19,12 @@ router.put("/profile", protectRoute, updateUserProfile);
 // User: Rate another user
 router.post("/rate/:userId", protectRoute, rateUser);
 
+// get all users
+router.get("/all", protectRoute, getAllUsers);
+
 // Admin: Get all users with pagination
 // router.get("/", protectRoute, checkRole("admin"), getAllUsersAdmin);
+
+router.get("/:id", protectRoute, getUserById);
 
 export default router;
