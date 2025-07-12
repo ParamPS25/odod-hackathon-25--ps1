@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser';
 import userAuthRoutes from './routes/authRoutes.js';
 import offerRoutes from './routes/offerRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import adminAuthRoutes from './routes/adminAuthRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -35,6 +37,7 @@ mongoose.connect(process.env.MONGO_URI)
     });
 
 // routes
+
 app.get('/', (req, res) => {
     res.send('API is up and running');
 });
@@ -42,6 +45,9 @@ app.get('/', (req, res) => {
 app.use('/api/auth',userAuthRoutes);
 app.use('/api/offers',offerRoutes);
 app.use('/api/users', userRoutes);
+
+app.use('/api/admin',adminRoutes);
+app.use("/api/auth/admin", adminAuthRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
