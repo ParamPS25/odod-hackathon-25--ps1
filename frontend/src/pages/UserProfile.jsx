@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { User, Mail, MapPin, Clock, Eye, Shield, Calendar, Settings, Edit3, Check, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [userData, setUserData] = useState({
     username: "John Smith",
@@ -80,6 +82,10 @@ const UserProfile = () => {
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold text-gray-900">User Profile</h1>
               <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-4 py-2 bg-red-400 text-white rounded-md hover:bg-blue-700 transition-colors">
+                  
+                <button  onClick={()=>navigate('/')}>back to home</button>
+                </div>
                 {!isEditing ? (
                   <button
                     onClick={handleEdit}

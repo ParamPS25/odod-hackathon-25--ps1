@@ -31,7 +31,7 @@ const Header = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo/Brand */}
             <div className="flex-shrink-0">
-              <span className="text-xl font-bold text-gray-800">MyApp</span>
+              <span className="text-xl font-bold text-gray-800">Skill Swap PlatForm</span>
             </div>
 
             {/* Navigation Items */}
