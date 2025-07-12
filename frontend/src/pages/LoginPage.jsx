@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -45,23 +46,27 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+  if (!validateForm()) return;
+  
+  setIsLoading(true);
+  
+  try {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    setIsLoading(true);
+    // Here you would typically send the data to your server
+    alert('Login successful! (This is a demo)');
+    console.log('Login attempt:', formData);
     
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Here you would typically send the data to your server
-      alert('Login successful! (This is a demo)');
-      console.log('Login attempt:', formData);
-    } catch (error) {
-      alert('Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    // Navigate to UserProfile on successful login
+    navigate('/UserProfile');
+    
+  } catch (error) {
+    alert('Login failed. Please try again.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleForgotUsername = () => {
     alert('Forgot Username functionality would be implemented here');
@@ -175,7 +180,7 @@ const LoginPage = () => {
         <div className="text-center mt-6">
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
-            <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
+            <button onClick={()=>{ navigate('/signUpPage');}} className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
               Sign up here
             </button>
           </p>

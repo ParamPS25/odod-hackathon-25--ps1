@@ -70,6 +70,8 @@ const UserProfile = () => {
   };
 
   return (
+    <div>
+      
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header Card */}
@@ -175,7 +177,7 @@ const UserProfile = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Personal Information */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6 w-[900px]">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -248,7 +250,7 @@ const UserProfile = () => {
             </div>
 
             {/* Skills Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 w-[900px]">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Skills</h3>
               <div className="space-y-4">
                 <div>
@@ -295,7 +297,7 @@ const UserProfile = () => {
           </div>
 
           {/* System Information Sidebar */}
-          <div className="space-y-6">
+          {/* <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">System Information</h3>
               <div className="space-y-4">
@@ -326,9 +328,10 @@ const UserProfile = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
+    </div>
     </div>
   );
 };

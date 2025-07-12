@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Home, User, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
 const SwapRequest = () => {
 const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
@@ -54,7 +55,7 @@ const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-purple-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
+      {/* <div className="bg-white border-b border-gray-200 px-4 py-3">
         <div className="flex items-center justify-between max-w-4xl mx-auto">
           <div className="flex items-center space-x-4">
             <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -100,8 +101,8 @@ const navigate = useNavigate();
             </div>
           </div>
         </div>
-      </div>
-
+      </div> */}
+<Header/>
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">

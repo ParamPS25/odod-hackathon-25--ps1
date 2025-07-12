@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 const SignUpPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -244,7 +245,9 @@ const SignUpPage = () => {
         <div className="text-center mt-2">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
+            <button onClick={()=>{
+              navigate('/loginPage');
+            }} className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors duration-200">
               Sign in here
             </button>
           </p>
